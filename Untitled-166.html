@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美食街区 - 实体桌游介绍 | 桌游厨房</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background-color: #faf8f5;
+            min-height: 100vh;
+            color: #3d3d3d;
+            line-height: 1.8;
+        }
+
+        /* 全局背景图案 - 美食街区瓷砖风格 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(90deg, rgba(230, 126, 34, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(230, 126, 34, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* 顶部导航 */
+        .nav {
+            background: #fff;
+            border-bottom: 3px solid #e67e22;
+            padding: 12px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e67e22;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: "🍜";
+            font-size: 26px;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #e67e22;
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 顶部大图海报区域 */
+        .hero-section {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+        }
+
+        .hero-poster {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image img {
+            width: 100%;
+            display: block;
+            border-radius: 0;
+            object-fit: cover;
+        }
+
+        .hero-poster::before,
+        .hero-poster::after {
+            display: none;
+        }
+
+        /* 海报边框装饰 */
+        .hero-poster::after {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .poster-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .poster-badge {
+            display: inline-block;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .poster-title {
+            font-size: 56px;
+            font-weight: 900;
+            color: transparent;
+            background: url("ba9246cc02ac830ed906b534271ca199.png") center/cover no-repeat;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+            margin-bottom: 15px;
+            letter-spacing: 8px;
+            font-family: 'Georgia', 'SimSun', serif;
+        }
+
+        .poster-subtitle {
+            font-size: 22px;
+            color: rgba(255,255,255,0.9);
+            background: rgba(0,0,0,0.25);
+            padding: 10px 30px;
+            border-radius: 30px;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .poster-info {
+            margin-top: 25px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .poster-info span {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(5px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 13px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* 游戏盒子堆叠展示图区域 */
+        .box-showcase {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .box-stack {
+            width: 100%;
+            max-width: 400px;
+            height: 500px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 20px;
+            position: relative;
+            border: 1px solid #dee2e6;
+        }
+
+        /* 盒子堆叠视觉效果 */
+        .box-item {
+            width: 85%;
+            height: 50px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            margin-bottom: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+        }
+
+        .box-item:nth-child(1) { height: 70px; background: linear-gradient(135deg, #f39c12, #d68910); }
+        .box-item:nth-child(2) { background: linear-gradient(135deg, #e67e22, #ca6f1e); }
+        .box-item:nth-child(3) { background: linear-gradient(135deg, #c0392b, #922b21); }
+        .box-item:nth-child(4) { background: linear-gradient(135deg, #8e44ad, #6c3483); }
+        .box-item:nth-child(5) { background: linear-gradient(135deg, #2980b9, #1a5276); }
+        .box-item:nth-child(6) { height: 60px; background: linear-gradient(135deg, #27ae60, #1e8449); }
+
+        .box-item::before {
+            content: "📦";
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        /* 正文内容区 */
+        .content-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        /* 内容区顶部装饰线 */
+        .content-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #27ae60, #3498db);
+            border-radius: 12px 12px 0 0;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e67e22;
+            display: inline-block;
+        }
+
+        h2 {
+            font-size: 20px;
+            color: #e67e22;
+            margin: 25px 0 15px;
+            padding-left: 12px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        h3 {
+            font-size: 17px;
+            color: #c0392b;
+            margin: 20px 0 12px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            color: #444;
+            background: linear-gradient(135deg, #fff9f0 0%, #fff 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+            margin-bottom: 20px;
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: #fff;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tr:hover {
+            background: #fff5e6;
+        }
+
+        /* 设计人员展示卡片 */
+        .designer-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .designer-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+        }
+
+        .designer-title {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .expansion-cover {
+            width: 200px;
+            height: 280px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            margin: 0 auto 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        .expansion-cover::before {
+            content: "🍜";
+            font-size: 60px;
+            opacity: 0.3;
+            position: absolute;
+        }
+
+        .expansion-cover .cover-title {
+            position: relative;
+            z-index: 1;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .expansion-cover .cover-sub {
+            position: relative;
+            z-index: 1;
+            font-size: 13px;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
+        .designer-list {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 2.2;
+            margin-top: 15px;
+        }
+
+        .designer-list strong {
+            color: #e74c3c;
+        }
+
+        .designer-contact {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #bdc3c7;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* 扩展包标签 */
+        .tag-new {
+            display: inline-block;
+            background: #1abc9c;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+            transform: rotate(-5deg);
+            position: relative;
+            top: -2px;
+        }
+
+        /* 提示框 */
+        .tip-box {
+            background: linear-gradient(135deg, #fff9f0 0%, #fff 100%);
+            border-left: 4px solid #f39c12;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .tip-box strong {
+            color: #e67e22;
+        }
+
+        /* 资源信息区 */
+        .resource-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .resource-title {
+            font-size: 18px;
+            color: #e67e22;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .resource-icon {
+            font-size: 22px;
+        }
+
+        .resource-label {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .resource-value {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* 温馨提示 */
+        .tips-box {
+            background: linear-gradient(135deg, #fff9f0 0%, #fff 100%);
+            border: 1px solid #f39c12;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .tips-title {
+            color: #e67e22;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tips-list {
+            font-size: 14px;
+            color: #666;
+            padding-left: 20px;
+        }
+
+        .tips-list li {
+            margin-bottom: 6px;
+        }
+
+        /* 评论区 */
+        .comments-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .comment-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .comment-count {
+            font-size: 20px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .comment-btn {
+            background: #e67e22;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comment-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .comment-body {
+            flex: 1;
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #3498db;
+            font-size: 15px;
+        }
+
+        .comment-time {
+            font-size: 13px;
+            color: #95a5a6;
+        }
+
+        .comment-text {
+            color: #555;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .comment-reply {
+            margin-top: 12px;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #e67e22;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .comment-reply strong {
+            color: #e67e22;
+        }
+
+        /* 相关推荐 */
+        .related-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .related-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .related-item:hover {
+            border-color: #e67e22;
+            background: #fff9f0;
+        }
+
+        .related-thumb {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+        }
+
+        .related-info h4 {
+            font-size: 15px;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .related-info p {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #95a5a6;
+            font-size: 13px;
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer a {
+            color: #e67e22;
+            text-decoration: none;
+        }
+
+        /* 页脚装饰 */
+        .footer-decoration {
+            text-align: center;
+            font-size: 24px;
+            letter-spacing: 10px;
+            margin-bottom: 10px;
+            opacity: 0.3;
+        }
+
+        /* 流程步骤 */
+        .process-step {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 12px 0;
+            border-left: 3px solid #e67e22;
+        }
+
+        .process-step h4 {
+            color: #e67e22;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .process-step p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 角色卡片 */
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .role-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 18px;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .role-card:hover {
+            border-color: #e67e22;
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.1);
+        }
+
+        .role-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .role-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 6px;
+        }
+
+        .role-type {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .role-type.passive {
+            background: #d5f5e3;
+            color: #27ae60;
+        }
+
+        .role-type.active {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .role-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 行动卡展示 */
+        .action-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin: 8px 0;
+            border: 1px solid #eee;
+        }
+
+        .action-icon {
+            font-size: 24px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .action-info h4 {
+            font-size: 15px;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .action-info p {
+            font-size: 13px;
+            color: #666;
+            margin: 0;
+        }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e67e22;
+            border-radius: 4px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .poster-title {
+                font-size: 32px;
+            }
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-section {
+                padding: 20px;
+            }
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section, .resource-section, .comments-section, .related-section {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#" class="logo">桌游厨房</a>
+            <div class="nav-links">
+                <a href="#">首页</a>
+                <a href="#">桌游库</a>
+                <a href="#">实体桌游</a>
+                <a href="#">社区</a>
+                <a href="#">关于</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 顶部大图海报 -->
+        <div class="hero-section">
+            <div class="hero-poster">
+                <div class="hero-image">
+                    <img src="69fc7ef5c872e95ae1ca9e6f.webp" alt="美食街区桌游介绍图">
+                </div>
+            </div>
+        </div>
+
+        <!-- 游戏盒子堆叠展示 -->
+        <div class="box-showcase">
+            <p style="margin-bottom: 15px; color: #666; font-size: 14px;">📦 全系列实体盒装一览</p>
+            <div class="box-stack">
+                <div class="box-item">美食街区：豪华扩展包</div>
+                <div class="box-item">美食街区：夜市风云</div>
+                <div class="box-item">美食街区：网红打卡</div>
+                <div class="box-item">美食街区：老字号</div>
+                <div class="box-item">美食街区：国际美食节</div>
+                <div class="box-item">美食街区：基础版</div>
+            </div>
+            <p style="margin-top: 15px; color: #888; font-size: 13px;">全系列共6盒，含基础版+5个扩展包</p>
+        </div>
+
+        <!-- 游戏目标 -->
+        <div class="content-section">
+            <h1>🎯 一、游戏目标</h1>
+            <div class="intro-text">
+                经营 <strong>10个回合</strong>，通过<strong>抢占摊位</strong>、<strong>制作菜品</strong>、<strong>干扰对手</strong>赚取最高营业额。10回合结束后，<strong>总分最高者称霸美食街</strong>。
+            </div>
+        </div>
+
+        <!-- 配件设置 -->
+        <div class="content-section">
+            <h1>📦 二、配件设置（4人局）</h1>
+            
+            <table>
+                <tr>
+                    <th>配件</th>
+                    <th>数量 / 说明</th>
+                </tr>
+                <tr>
+                    <td>🥬 基础食材</td>
+                    <td>每回合中央区放 8个</td>
+                </tr>
+                <tr>
+                    <td>🦞 稀有食材</td>
+                    <td>每回合中央区放 5个</td>
+                </tr>
+                <tr>
+                    <td>🚶 客流</td>
+                    <td>每回合中央区放 6个</td>
+                </tr>
+                <tr>
+                    <td>👑🏪 黄金摊位</td>
+                    <td>2个（游戏全程仅2个）</td>
+                </tr>
+                <tr>
+                    <td>🏪 普通铺面</td>
+                    <td>4个</td>
+                </tr>
+                <tr>
+                    <td>🍳 后厨位</td>
+                    <td>4个</td>
+                </tr>
+            </table>
+
+            <div class="tip-box">
+                <strong>🎴 行动卡：</strong>5种 × 4张 = 20张牌堆（详见「五、回合流程」）<br>
+                <strong>📝 计分纸：</strong>记录每回合营业额与亏损
+            </div>
+
+            <div class="tip-box">
+                <strong>🎁 初始发放：</strong>每人拿 <strong>3基础食材 + 1稀有食材 + 1客流</strong>，并抽 <strong>2张行动卡</strong>
+            </div>
+        </div>
+
+        <!-- 角色能力 -->
+        <div class="content-section">
+            <h1>👥 三、角色能力</h1>
+            <p style="margin-bottom: 15px;"><em>4人各选1个，不重复，每回合自动生效</em></p>
+            
+            <div class="role-grid">
+                <div class="role-card">
+                    <div class="role-icon">🍲</div>
+                    <div class="role-name">家常菜馆</div>
+                    <span class="role-type passive">被动</span>
+                    <div class="role-desc">制作「家常小炒」时，只需1个基础食材（原为2）</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-icon">🥗</div>
+                    <div class="role-name">网红轻食店</div>
+                    <span class="role-type passive">被动</span>
+                    <div class="role-desc">资源争夺阶段，免费多拿1个客流（不耗行动点）</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-icon">🍱</div>
+                    <div class="role-name">高端私房菜</div>
+                    <span class="role-type passive">被动</span>
+                    <div class="role-desc">制作含稀有食材的菜品时，该菜品营业额+2</div>
+                </div>
+                <div class="role-card">
+                    <div class="role-icon">🍢</div>
+                    <div class="role-name">市井大排档</div>
+                    <span class="role-type active">主动</span>
+                    <div class="role-desc">每回合限1次，指定1名对手，其本回合行动点-1（最少剩1点）</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 菜品菜单 -->
+        <div class="content-section">
+            <h1>📜 四、菜品菜单</h1>
+            <p><em>制作时一次性消耗食材</em></p>
+            
+            <table>
+                <tr>
+                    <th>菜品</th>
+                    <th>所需食材</th>
+                    <th>基础营业额</th>
+                </tr>
+                <tr>
+                    <td>🍳 家常小炒</td>
+                    <td>2基础食材</td>
+                    <td><strong>4分</strong></td>
+                </tr>
+                <tr>
+                    <td>⭐ 特色招牌</td>
+                    <td>1基础 + 1稀有</td>
+                    <td><strong>6分</strong></td>
+                </tr>
+                <tr>
+                    <td>💎 豪华套餐</td>
+                    <td>2稀有食材</td>
+                    <td><strong>10分</strong></td>
+                </tr>
+                <tr>
+                    <td>🔥 引流爆款</td>
+                    <td>1基础 + 1客流</td>
+                    <td><strong>5分</strong></td>
+                </tr>
+            </table>
+
+            <div class="tip-box">
+                <strong>💡 客流加成：</strong>制作任意菜品时，可额外消耗任意数量客流，每消耗1客流该菜品多加<strong>2分</strong>（客流不替代食材，纯加成）<br><br>
+                <strong>📝 例：</strong>做「特色招牌」并额外砸2客流，营业额 = 6 + 2×2 = <strong>10分</strong>
+            </div>
+        </div>
+
+        <!-- 回合流程 -->
+        <div class="content-section">
+            <h1>⏱️ 五、回合流程（共10回合）</h1>
+            <p><em>每回合按以下顺序进行：</em></p>
+
+            <div class="process-step">
+                <h4>🔄 ① 市场刷新</h4>
+                <p>▸ 将本回合资源放入中央区：<strong>8基础、5稀有、6客流</strong><br>
+                ▸ 空出的摊位/后厨位重新放回桌面（已被抢占的永久归属，不归还）</p>
+            </div>
+
+            <div class="process-step">
+                <h4>🎴 ② 抽行动卡</h4>
+                <p>▸ 每人从牌堆摸 <strong>1张</strong>，手牌上限 <strong>4张</strong>，超出需立即弃1张</p>
+            </div>
+
+            <div class="process-step">
+                <h4>⚡ ③ 出牌阶段（可选）</h4>
+                <p>▸ 每人可选择打出 <strong>1或2张</strong>行动卡，或跳过。所有效果在下回合生效</p>
+            </div>
+
+            <h3>🎴 5种行动卡效果</h3>
+            
+            <div class="action-card">
+                <div class="action-icon">🚫</div>
+                <div class="action-info">
+                    <h4>断货干扰</h4>
+                    <p>指定1名玩家，其下回合不能从中央区拿资源（已有资源不受影响）</p>
+                </div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">🚶</div>
+                <div class="action-info">
+                    <h4>抢走散客</h4>
+                    <p>指定1名玩家，其必须给你1个客流（若其当前无客流，则本回合其获得的第1个客流直接归你）</p>
+                </div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">📉</div>
+                <div class="action-info">
+                    <h4>压价竞争</h4>
+                    <p>指定1名玩家，其下回合所有菜品营业额-2（单道菜最少为0）</p>
+                </div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">📢</div>
+                <div class="action-info">
+                    <h4>限时促销</h4>
+                    <p>自己本回合所制作的菜品营业额+2</p>
+                </div>
+            </div>
+            <div class="action-card">
+                <div class="action-icon">🛒</div>
+                <div class="action-info">
+                    <h4>紧急囤货</h4>
+                    <p>立即从中央区拿3种资源（每种一张，不耗行动点）</p>
+                </div>
+            </div>
+
+            <div class="process-step">
+                <h4>⚔️ ④ 资源争夺阶段（核心）</h4>
+                <p>▸ 从庄家开始，顺时针轮流行动。每人每回合有 <strong>2个行动点</strong><br><br>
+                <strong>行动点花费：</strong><br>
+                ▸ <strong>1点：</strong>从中央区拿 <strong>2个基础食材</strong> 或 <strong>1个稀有食材</strong> 或 <strong>2个客流</strong><br>
+                ▸ <strong>1点：</strong>抢占 <strong>1个空置</strong> 的黄金摊位/普通铺面/后厨位<br>
+                ▸ <strong>2点：</strong>从 <strong>1名对手</strong> 处掠夺 <strong>1个资源</strong>（不能掠夺摊位，不能掠夺使对方食材归零）<br><br>
+                <strong>🍳 后厨位特权：</strong>拥有后厨位的玩家，每回合额外获得<strong>1个专属行动点</strong>（只能用于拿资源，不能抢摊位）<br><br>
+                <strong>👑 抢占门槛：</strong>黄金摊位营业额需达到<strong>50</strong> / 后厨位<strong>30</strong> / 普通铺面<strong>15</strong></p>
+            </div>
+
+            <div class="process-step">
+                <h4>👨‍🍳 ⑤ 经营制作阶段</h4>
+                <p>▸ 本回合制作所需菜品，支付对应食材，记录营业额<br>
+                ▸ 食材充足 → 获得对应营业额（可追加客流加成）<br>
+                ▸ 食材不足 → 该菜品无法上菜，记录 <strong>1次亏损</strong></p>
+            </div>
+
+            <div class="process-step">
+                <h4>✅ ⑥ 回合结束</h4>
+                <p>▸ 中央区剩余资源全部清空（不保留到下一回合）<br>
+                ▸ 在计分纸上记录本回合总营业额</p>
+            </div>
+        </div>
+
+        <!-- 游戏结束与算分 -->
+        <div class="content-section">
+            <h1>🏆 六、游戏结束与算分（10回合后）</h1>
+            
+            <table>
+                <tr>
+                    <th>项目</th>
+                    <th>计分方式</th>
+                </tr>
+                <tr>
+                    <td><strong>① 累计营业额</strong></td>
+                    <td>10回合的营业额直接相加</td>
+                </tr>
+                <tr>
+                    <td><strong>② 摊位占有分（一次性）</strong></td>
+                    <td>黄金摊位 <strong>+15分</strong> / 普通铺面 <strong>+8分</strong> / 后厨位 <strong>+5分</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>③ 剩余资源折现</strong></td>
+                    <td>基础食材 <strong>1分/个</strong>、稀有食材 <strong>2分/个</strong>、客流 <strong>1分/个</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>④ 亏损惩罚</strong></td>
+                    <td>10回合中，每发生 <strong>1次</strong>食材不足无法上菜，<strong>−3分</strong></td>
+                </tr>
+            </table>
+
+            <div class="tip-box">
+                <strong>🏆 最终公式：</strong><br>
+                <strong>总分 = ①累计营业额 + ②摊位分 + ③资源折现 − ④亏损惩罚</strong><br><br>
+                分数最高者获胜。若平分，则剩余资源多者胜；仍平分则共享霸主。
+            </div>
+        </div>
+
+        <!-- 关键规则提示 -->
+        <div class="content-section">
+            <h1>💡 七、关键规则提示</h1>
+
+            <div class="tips-box">
+                <div class="tips-title">⚠️ 核心规则要点</div>
+                <ol class="tips-list">
+                    <li><strong>🏪 摊位是永久占有：</strong>抢到后整局属于你，别人无法掠夺，但每类摊位数量有限，早抢早得</li>
+                    <li><strong>⏰ 每回合资源清空：</strong>本回合不抢就浪费，制造持续紧张感</li>
+                    <li><strong>⚖️ 行动点只有2个：</strong>拿资源就不能抢摊位，抢摊位就可能没食材做菜，需要取舍</li>
+                    <li><strong>👥 客流是万能加成：</strong>但本身也是有限资源，网红店有天然优势，其他玩家可通过「抢走散客」截胡</li>
+                    <li><strong>⚠️ 亏损惩罚较重（−3分）：</strong>宣告菜品前务必确认食材够，不要贪多</li>
+                    <li><strong>🎯 大排档的干扰：</strong>在对手行动前声明，使其本回合只剩1点，极具压制力</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 资源信息 -->
+        <div class="resource-section">
+            <div class="resource-title">📋 资源信息</div>
+            <div class="resource-grid">
+                <div class="resource-item">
+                    <span class="resource-icon">📅</span>
+                    <div>
+                        <div class="resource-label">最近更新</div>
+                        <div class="resource-value">2025-05-01</div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">⏳</span>
+                    <div>
+                        <div class="resource-label">有效期限</div>
+                        <div class="resource-value">永久有效</div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">💰</span>
+                    <div>
+                        <div class="resource-label">参考价格</div>
+                        <div class="resource-value">基础版 ¥198 / 扩展 ¥88-128</div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-icon">🌐</span>
+                    <div>
+                        <div class="resource-label">语言版本</div>
+                        <div class="resource-value">中文正版</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <div class="tips-title">💡 购买提示</div>
+                <ol class="tips-list">
+                    <li>建议新手先购买基础版体验，确认喜欢后再入扩展</li>
+                    <li>扩展包需搭配基础版使用，不可独立游戏</li>
+                    <li>中文正版由桌游厨房团队原创设计</li>
+                    <li>部分扩展为限量发售，建议尽早入手收藏</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 评论区 -->
+        <div class="comments-section">
+            <div class="comment-header-bar">
+                <span class="comment-count">💬 评论 (128)</span>
+                <button class="comment-btn">发表评论</button>
+            </div>
+
+            <div class="comment-item">
+                <div class="comment-avatar">🍲</div>
+                <div class="comment-body">
+                    <div class="comment-meta">
+                        <span class="comment-author">玩家1</span>
+                        <span class="comment-time">2025-05-06 14:32</span>
+                    </div>
+                    <div class="comment-text">
+                        这游戏太上头了！大排档的减行动点技能太恶心了，每次都被针对😂 不过家常菜馆的被动确实很强，省食材意味着能多做菜。实体配件质量也不错，食材标记手感很好！
+                    </div>
+                    <div class="comment-reply">
+                        <strong>管理员回复：</strong>感谢支持！建议尝试"夜市风云"扩展，新增了夜市特殊规则，晚上客流翻倍！
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment-item">
+                <div class="comment-avatar">🥗</div>
+                <div class="comment-body">
+                    <div class="comment-meta">
+                        <span class="comment-author">玩家2</span>
+                        <span class="comment-time">2025-05-05 09:15</span>
+                    </div>
+                    <div class="comment-text">
+                        网红轻食店真的强！免费多拿1个客流，配合客流加成机制，后期一波爆发直接翻盘。就是前期容易被大排档针对，需要苟住。希望出个平衡补丁。
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment-item">
+                <div class="comment-avatar">🍢</div>
+                <div class="comment-body">
+                    <div class="comment-meta">
+                        <span class="comment-author">玩家3</span>
+                        <span class="comment-time">2025-05-03 20:48</span>
+                    </div>
+                    <div class="comment-text">
+                        大排档玩家报到！这角色就是搞心态的，专盯着资源最多的对手减行动点。不过要注意时机，在对方行动前声明才有效，时机把握很重要。实体版的行动卡质感很好！
+                    </div>
+                    <div class="comment-reply">
+                        <strong>作者回复：</strong>大排档确实是高操作角色！v2.0规则会微调大排档的触发时机，预计下个月更新实体版规则书。
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment-item">
+                <div class="comment-avatar">🍱</div>
+                <div class="comment-body">
+                    <div class="comment-meta">
+                        <span class="comment-author">玩家4</span>
+                        <span class="comment-time">2025-04-28 18:22</span>
+                    </div>
+                    <div class="comment-text">
+                        请问豪华套餐2个稀有食材太难凑了，有没有调整建议？另外想问下扩展包"国际美食节"什么时候上市？
+                    </div>
+                    <div class="comment-reply">
+                        <strong>管理员回复：</strong>豪华套餐确实高风险高回报！建议配合后厨位多拿资源。"国际美食节"扩展预计6月上市，包含8国美食主题角色！
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 相关推荐 -->
+        <div class="related-section">
+            <h1>🎲 相关桌游推荐</h1>
+            <div class="related-grid">
+                <div class="related-item">
+                    <div class="related-thumb">🍷</div>
+                    <div class="related-info">
+                        <h4>葡萄酒庄园</h4>
+                        <p>工人放置 | 1-6人 | 中策 | 实体桌游</p>
+                    </div>
+                </div>
+                <div class="related-item">
+                    <div class="related-thumb">🍕</div>
+                    <div class="related-info">
+                        <h4>披萨大亨</h4>
+                        <p>轻策经营 | 2-5人 | 家庭 | 实体桌游</p>
+                    </div>
+                </div>
+                <div class="related-item">
+                    <div class="related-thumb">☕</div>
+                    <div class="related-info">
+                        <h4>咖啡连锁店</h4>
+                        <p>引擎构筑 | 1-4人 | 重策 | 实体桌游</p>
+                    </div>
+                </div>
+                <div class="related-item">
+                    <div class="related-thumb">🍱</div>
+                    <div class="related-info">
+                        <h4>寿司GO!</h4>
+                        <p>卡牌轮抽 | 2-8人 | 入门 | 实体桌游</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <div class="footer-decoration">🍜 🍲 🥘 🍳 🍱 🍣 🍤 🍗 🍖</div>
+            <p>本站所有资源信息仅供参考，实体桌游请支持正版</p>
+            <p>如有侵权请联系管理员删除：<a href="mailto:kitchenboard@example.com">kitchenboard@example.com</a></p>
+            <p style="margin-top: 10px;">🍜 桌游厨房 © 2025 | 祝您游戏愉快，称霸美食街！</p>
+        </div>
+    </div>
+</body>
+</html>
